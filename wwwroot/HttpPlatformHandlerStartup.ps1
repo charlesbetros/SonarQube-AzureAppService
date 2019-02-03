@@ -1,6 +1,11 @@
-﻿function log($message) {
+function log($message) {
     [DateTime]$dateTime = [System.DateTime]::Now
-    Write-Output "$($dateTime.ToLongTimeString()) $message" 
+    # Write-Output "INFO: $($dateTime.ToLongTimeString()) $message" 
+}
+
+function error($message) {
+    [DateTime]$dateTime = [System.DateTime]::Now
+    Write-Output "ERROR: $($dateTime.ToLongTimeString()) $message" 
 }
 
 log('Starting HttpPlatformHandler Script')
@@ -10,7 +15,7 @@ log("HTTP_PLATFORM_PORT is: $port")
 log('Searching for sonar.properties file')
 $propFile = Get-ChildItem 'sonar.properties' -Recurse
 if(!$propFile) {
-    log("Could not find sonar.properties")
+    error("Could not find sonar.properties")
     exit
 }
 log("File found at: $($propFile.FullName)")
@@ -21,7 +26,7 @@ $configContents -ireplace '#?sonar.web.port=.+', "sonar.web.port=$port" | Set-Co
 log('Searching for wrapper.conf file')
 $wrapperConfig = Get-ChildItem 'wrapper.conf' -Recurse
 if(!$wrapperConfig) {
-    log("Could not find wrapper.conf")
+    error("Could not find wrapper.conf")
     exit
 }
 log("File found at: $($wrapperConfig.FullName)")
